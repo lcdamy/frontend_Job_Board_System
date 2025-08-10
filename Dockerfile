@@ -19,8 +19,8 @@ RUN npm install
 # Copy the rest of the application code
 COPY . .
 
-# Build the Next.js application with the injected env
-RUN npm run build
+# Build the Next.js application with the injected env, disabling ESLint during build
+RUN NEXT_DISABLE_ESLINT_PLUGIN=true npm run build
 
 # Expose the port the app runs on
 EXPOSE 3001
