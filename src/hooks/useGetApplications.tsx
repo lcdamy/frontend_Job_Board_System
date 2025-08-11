@@ -2,9 +2,8 @@
 import useSWR from 'swr';
 import { useSession } from 'next-auth/react';
 
-export function useGetApplications() {
+export function useGetApplications(page: number, pageSize: number) {
     const { data: session, status } = useSession();
-
     const accessToken = session?.user?.token;
     const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
@@ -14,13 +13,16 @@ export function useGetApplications() {
         }
     }).then((res) => res.json());
 
-    const { data: applications, error, isLoading } = useSWR(
-        accessToken ? `${apiUrl}/api/v1/application/list?limit=1000` : null,
-        fetcher
-    );
+    const endpoint = accessToken
+        ? `${apiUrl}/api/v1/application/list?page=${page}&limit=${pageSize}`
+        : null;
+
+    const { data, error, isLoading } = useSWR(endpoint, fetcher);
+
     return {
+        applications: data?.data ?? { data: [], total: 0, page: 1, lastPage: 1 },
+        total: data?.data?.total ?? 0,
         error,
-        applications,
         isLoading,
         sessionStatus: status
     }

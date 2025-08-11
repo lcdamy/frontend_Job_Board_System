@@ -1,6 +1,5 @@
 import React from "react";
 import DashboardJobs from "@/components/DashboardJobs";
-import DashboardOnBoarding from "@/components/DashboardOnBoarding"
 import DashboardCandidates from "@/components/DashboardCandidates"
 import {
     Tabs,
@@ -41,9 +40,7 @@ function Job() {
                 <TabsContent value="candidates">
                     <DashboardCandidates />
                 </TabsContent>
-                <TabsContent value="onboarding">
-                    <DashboardOnBoarding />
-                </TabsContent>
+     
             </Tabs>
         </div>
     )

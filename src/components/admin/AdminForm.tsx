@@ -44,6 +44,11 @@ export const jobColumns: ColumnDef<Job>[] = [
         cell: ({ row }) => <span>{row.getValue("location") || "-"}</span>,
     },
     {
+        accessorKey: "company",
+        header: "Company",
+        cell: ({ row }) => <span>{row.getValue("company") || "-"}</span>,
+    },
+    {
         accessorKey: "deadline",
         header: "Deadline",
         cell: ({ row }) => {

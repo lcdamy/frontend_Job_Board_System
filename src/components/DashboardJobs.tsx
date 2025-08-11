@@ -1,11 +1,15 @@
 'use client'
+import React, { useState } from "react"
 import { DataTable } from '@/components/table/data-table'
 import { jobColumns } from '@/components/table/columns'
 import { Skeleton } from "@/components/ui/skeleton"
 import { useGetJobs } from '@/hooks/useGetJobs';
 export default function DashboardJobs() {
-    const { jobs, isLoading, error, sessionStatus: status } = useGetJobs()
-    if (isLoading || status === 'loading') {
+
+    const [page, setPage] = useState(1);
+    const [pageSize, setPageSize] = useState(10);
+    const { jobs, total, error, isLoading, sessionStatus } = useGetJobs(page, pageSize);
+    if (isLoading || sessionStatus === 'loading') {
         return (
             <div className="container mx-auto flex justify-center items-center h-64 mt-24">
                 <div className="w-full">
@@ -44,7 +48,15 @@ export default function DashboardJobs() {
     }
     return (
         <div className="container mx-auto">
-            <DataTable columns={jobColumns} data={jobs?.data?.data || []} />
+            <DataTable
+            columns={jobColumns}
+            data={jobs?.data ?? []}
+            page={page}
+            pageSize={pageSize}
+            total={total}
+            setPage={setPage}
+            setPageSize={setPageSize}
+            />
         </div>
     );
 }

@@ -2,7 +2,7 @@
 import useSWR from 'swr';
 import { useSession } from 'next-auth/react';
 
-export function useGetJobs(page: number, pageSize: number) {
+export function useGetJob(jobId: string) {
   const { data: session, status } = useSession();
   const accessToken = session?.user?.token;
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
@@ -14,14 +14,13 @@ export function useGetJobs(page: number, pageSize: number) {
   }).then((res) => res.json());
 
   const endpoint = accessToken
-    ? `${apiUrl}/api/v1/job/list-with-applications?page=${page}&limit=${pageSize}`
+    ? `${apiUrl}/api/v1/job/detail/${jobId}`
     : null;
 
   const { data, error, isLoading } = useSWR(endpoint, fetcher);
 
   return {
-    jobs: data?.data ?? { data: [], total: 0, page: 1, lastPage: 1 },
-    total: data?.data?.total ?? 0,
+    job: data?.data ?? null,
     error,
     isLoading,
     sessionStatus: status

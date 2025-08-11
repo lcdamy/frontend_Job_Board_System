@@ -1,22 +1,33 @@
+export type JobApplication = {
+    id: number;
+    jobId: number;
+    userId: number;
+    coverLetter: string;
+    resumeURL: string;
+    status: string;
+    phoneNumber: string;
+    email: string;
+    linkedInProfile: string;
+    jobTitle: string;
+    names: string;
+    appliedAt: string;
+    updatedAt: string;
+};
+
 export type Job = {
-    id: string;
-    position: string;
-    positionLeft: number;
-    applicants: number;
-    interviewed: number;
-    rejected: number;
-    feedbackPending: number;
-    offered: number;
+    id: number;
+    title: string;
     description: string;
-    requirements: string[];
-    responsabilities: string[];
-    applicationLink: string;
-    applicationDeadline: string;
-    status?: "open" | "closed";
-    createdAt?: string;
-    updatedAt?: string;
-    user?: unknown
-}
+    company: string;
+    location: string;
+    deadline: string;
+    status: "open" | "closed";
+    type: string;
+    postedBy: number;
+    createdAt: string;
+    updatedAt: string;
+    applications: JobApplication[];
+};
 
 export type User = {
     id: string | number;

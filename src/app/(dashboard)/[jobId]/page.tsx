@@ -1,4 +1,5 @@
 import DashboardHeader from "@/components/DashboardHeader";
+import DashboardJobs from "@/components/DashboardJobs";
 
 export default function Page() {
   return (
@@ -6,6 +7,9 @@ export default function Page() {
       <div className="flex flex-col w-full">
         {/* Sidebar can be added here if needed */}
         <DashboardHeader />
+
+        <DashboardJobs />
+
       </div>
     </div>
   )

@@ -13,6 +13,8 @@ import { registerSchema } from '@/lib/validation'
 import toast, { Toaster } from 'react-hot-toast';
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 
+import { mutate } from 'swr';
+
 const EyeIcon = ({ open }: { open: boolean }) => open ? (
     <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -75,6 +77,8 @@ function Settings() {
 
             const data = await response.json();
             toast.success('Registration successful!');
+            // Refresh the users list in SWR
+            mutate((key: string) => typeof key === 'string' && key.includes('/api/v1/auth/users'));
             formRef.current?.reset();
         } catch (error: any) {
             toast.error(error.message || 'An unexpected error happened');
@@ -196,9 +200,25 @@ function Settings() {
                                                     <EyeIcon open={showConfirmPassword} />
                                                 </button>
                                             </div>
-                                            <Button type="submit" className="w-full cursor-pointer bg-[rgba(247,172,37)] hover:bg-[rgba(250,178,37)]" disabled={loadingRegister}>
-                                                {loadingRegister ? "Signing up..." : "Sign Up"}
-                                            </Button>
+                                            <div className="flex flex-row gap-2 justify-end">
+                                                <Button
+                                                    type="button"
+                                                    variant="outline"
+                                                    className=""
+                                                    disabled={loadingRegister}
+                                                    onClick={() => formRef.current?.reset()}
+                                                >
+                                                    Cancel
+                                                </Button>
+                                                <Button
+                                                    type="submit"
+                                                    className="cursor-pointer bg-[rgba(247,172,37)] hover:bg-[rgba(250,178,37)]"
+                                                    disabled={loadingRegister}
+                                                >
+                                                    {loadingRegister ? "Saving up..." : "Save"}
+                                                </Button>
+
+                                            </div>
                                         </div>
                                     </form>
                                 </CardContent>
