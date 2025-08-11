@@ -26,12 +26,6 @@ function DashboardHeader() {
           type="button"
           className="bg-[#4B93E7] text-white hover:bg-[#082777] hover:cursor-pointer transition-colors duration-200 ease-in-out w-full sm:w-auto"
         >
-          <CirclePlus /> <span>Add Candidate</span>
-        </Button>
-        <Button
-          type="button"
-          className="bg-[#4B93E7] text-white hover:bg-[#082777] hover:cursor-pointer transition-colors duration-200 ease-in-out w-full sm:w-auto"
-        >
           <CirclePlus /> <span>Add Job</span>
         </Button>
       </div>

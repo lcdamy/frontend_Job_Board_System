@@ -1,13 +1,9 @@
 import Joi from 'joi';
 
 export const registerSchema = Joi.object({
-  firstname: Joi.string().min(3).required().messages({
-    'string.min': 'First name must be at least 3 characters',
-    'string.empty': 'First name is required',
-  }),
-  lastname: Joi.string().min(3).required().messages({
-    'string.min': 'Last name must be at least 3 characters',
-    'string.empty': 'Last name is required',
+  names: Joi.string().min(3).required().messages({
+    'string.min': 'Names must be at least 3 characters',
+    'string.empty': 'Names are required',
   }),
   email: Joi.string().pattern(new RegExp('^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$')).required().messages({
     'string.pattern.base': 'Email must be a valid email',

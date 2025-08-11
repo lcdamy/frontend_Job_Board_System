@@ -16,12 +16,10 @@ import {
 
 import { tabs } from '@/lib/constants'
 
-
-
 export function AppSidebar() {
   const pathName = usePathname();
   return (
-    <Sidebar className="bg-[#082777] rounded-[8px]">
+    <Sidebar className="bg-[#082777]">
       <SidebarContent>
         <SidebarGroup >
           <SidebarGroupLabel className="flex flex-col gap-2 items-center mt-4 mb-16">

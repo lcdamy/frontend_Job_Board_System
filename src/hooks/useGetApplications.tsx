@@ -1,0 +1,28 @@
+'use client'
+import useSWR from 'swr';
+import { useSession } from 'next-auth/react';
+
+export function useGetApplications() {
+    const { data: session, status } = useSession();
+
+    const accessToken = session?.user?.token;
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
+    const fetcher = (url: string) => fetch(url, {
+        headers: {
+            'Authorization': `Bearer ${accessToken}`,
+        }
+    }).then((res) => res.json());
+
+    const { data: applications, error, isLoading } = useSWR(
+        accessToken ? `${apiUrl}/api/v1/application/list?limit=1000` : null,
+        fetcher
+    );
+    return {
+        error,
+        applications,
+        isLoading,
+        sessionStatus: status
+    }
+}
+

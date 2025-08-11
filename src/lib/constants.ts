@@ -5,25 +5,15 @@ export const tabs = [
     icon: '/side-home-Icon.svg'
   },
   {
-    title: 'Jobs',
-    url: '#',
-    icon: '/side-job-Icon.svg'
-  },
-  {
-    title: 'Candidates',
-    url: '/candidates/1',
+    title: 'Applications',
+    url: '/applications',
     icon: '/side-candidate-Icon.svg'
   },
   {
-    title: 'Reports',
-    url: '#',
-    icon: '/side-report-Icon.svg'
-  },
-  {
-    title: 'Calendar',
-    url: '#',
-    icon: '/side-calendar-Icon.svg'
-  },
+    title: 'Parameters',
+    url: '/parameters',
+    icon: '/side-setting-Icon.svg'
+  }
 ]
 
 export const candidateFiles = [

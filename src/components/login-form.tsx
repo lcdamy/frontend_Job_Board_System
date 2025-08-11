@@ -47,15 +47,13 @@ export function LoginForm({ className, activeTab, onTabChange, ...props }: Login
     e.preventDefault();
     setLoadingRegister(true);
     const form = e.currentTarget;
-    const firstname = (form.elements.namedItem('firstname') as HTMLInputElement)?.value.trim();
-    const lastname = (form.elements.namedItem('lastname') as HTMLInputElement)?.value.trim();
+    const names = (form.elements.namedItem('names') as HTMLInputElement)?.value.trim();
     const email = (form.elements.namedItem('email') as HTMLInputElement)?.value.trim();
     const password = (form.elements.namedItem('password') as HTMLInputElement)?.value;
     const re_password = (form.elements.namedItem('re_password') as HTMLInputElement)?.value;
 
     const { error } = registerSchema.validate({
-      firstname,
-      lastname,
+      names,
       email,
       password,
       confirmPassword: re_password
@@ -70,11 +68,11 @@ export function LoginForm({ className, activeTab, onTabChange, ...props }: Login
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          firstname,
-          lastname,
+          names,
           email,
           password,
-          role: 'hr',
+          type: 'job-seeker',
+          registrationType: 'manual',
           profilePictureURL: 'https://cdn-icons-png.flaticon.com/512/149/149071.png',
         }),
       });
@@ -367,35 +365,20 @@ export function LoginForm({ className, activeTab, onTabChange, ...props }: Login
                         <div className="relative">
                           <input
                             type="text"
-                            id="signup-first-name"
-                            name="firstname"
+                            id="signup-names"
+                            name="names"
                             className="block px-2 pb-2 pt-3 w-full text-xs text-gray-900 bg-[#DDEAFB] rounded-lg border border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer placeholder:text-[#082777]"
                             placeholder=""
                             required
                           />
                           <label
-                            htmlFor="signup-first-name"
+                            htmlFor="signup-names"
                             className="absolute text-xs text-[#082777] dark:text-gray-400 duration-300 transform -translate-y-3 scale-75 top-2 z-10 origin-[0] bg-[#DDEAFB] dark:bg-[#DDEAFB] px-1 peer-focus:px-1 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-3 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1"
                           >
-                            First Name
+                           Names
                           </label>
                         </div>
-                        <div className="relative">
-                          <input
-                            type="text"
-                            id="signup-last-name"
-                            name="lastname"
-                            className="block px-2 pb-2 pt-3 w-full text-xs text-gray-900 bg-[#DDEAFB] rounded-lg border border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer placeholder:text-[#082777]"
-                            placeholder=""
-                            required
-                          />
-                          <label
-                            htmlFor="signup-last-name"
-                            className="absolute text-xs text-[#082777] dark:text-gray-400 duration-300 transform -translate-y-3 scale-75 top-2 z-10 origin-[0] bg-[#DDEAFB] dark:bg-[#DDEAFB] px-1 peer-focus:px-1 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-3 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1"
-                          >
-                            Last Name
-                          </label>
-                        </div>
+   
                         <div className="relative">
                           <input
                             type="email"
