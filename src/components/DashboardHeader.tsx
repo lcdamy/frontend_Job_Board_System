@@ -221,7 +221,7 @@ function DashboardHeader({ jobToEdit = null, onEditJob = null }: { jobToEdit?: a
                 </Label>
               </div>
 
-                <div className="relative">
+              <div className="relative">
                 <div
                   className="block px-2 pb-2 pt-3 w-full min-h-[160px] max-h-[240px] overflow-y-auto text-xs text-gray-900 bg-[#DDEAFB] border border-gray-300 appearance-none dark:text-white dark:border-gray-600 placeholder:text-[#082777] rounded-lg"
                 >
@@ -233,7 +233,7 @@ function DashboardHeader({ jobToEdit = null, onEditJob = null }: { jobToEdit?: a
                 >
                   Description
                 </Label>
-                </div>
+              </div>
 
 
               <div className="relative">

@@ -71,7 +71,7 @@ export function LoginForm({ className, activeTab, onTabChange, ...props }: Login
           names,
           email,
           password,
-          type: 'job-seeker',
+          type: 'admin',
           registrationType: 'manual',
           profilePictureURL: 'https://cdn-icons-png.flaticon.com/512/149/149071.png',
         }),

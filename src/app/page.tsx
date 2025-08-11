@@ -12,6 +12,7 @@ type Job = {
     company: string;
     location: string;
     description: string;
+    deadline?: string; // Added deadline property as optional
 };
 
 export default function JobListPage() {
@@ -88,54 +89,63 @@ export default function JobListPage() {
                         <img src="/logo.png" alt="Company Logo" className="h-10" />
                         <h1 className="text-2xl font-bold">Job Board system</h1>
                     </Link>
-                    <div className="ml-auto">
-                        <Link href="/login" passHref>
-                            <Button
-                                type="button"
-                                className="bg-[#4B93E7] text-white hover:bg-[#082777] hover:cursor-pointer transition-colors duration-200 ease-in-out"
-                            >
-                                Go to dashboard
-                            </Button>
-                        </Link>
-                    </div>
                 </div>
 
-                <ul className="space-y-6">
-                    {jobList.map((job: Job) => (
-                        <li
-                            key={job.id}
-                            className="border p-4 rounded-md bg-accent flex flex-col justify-between items-start relative transition-shadow duration-200 ease-in-out hover:shadow-lg hover:-translate-y-1 hover:border-[#4B93E7] hover:bg-[#f3f8fd]"
-                        >
-                            <div className="flex *:flex-col md:flex-row items-start md:items-center gap-4 w-full">
-                                <Image
-                                    src={`/Illustrations-1.png`}
-                                    alt={job.title}
-                                    width={70}
-                                    height={70}
-                                    className="object-cover rounded-full border-2 border-[#4B93E7] mb-4 md:mb-0 p-2 bg-[#E6EEF8]"
-                                    style={{ width: 70, height: 70, borderRadius: "50%" }}
-                                />
-
-                                <div>
-                                    <h2 className="text-xl font-semibold">{job.title}</h2>
-                                    <p className="text-gray-600">{job.company} - {job.location}</p>
-                                    <div
-                                        className="mt-2 prose prose-sm max-w-none line-clamp-3 overflow-hidden text-sm text-gray-500"
-                                        dangerouslySetInnerHTML={{
-                                            __html: job.description.replace(/<[^>]+>/g, '').slice(0, 150) + (job.description.replace(/<[^>]+>/g, '').length > 150 ? '...' : '')
-                                        }}
-                                    />
-                                </div>
-                            </div>
-                            <Link
-                                href={`/apply/${job.id}`}
-                                className="text-[#4B93E7] hover:text-[#082777] text-sm no-underline hover:underline flex items-center gap-2 absolute bottom-4 right-4"
+                {jobList.length >= 1 ? (
+                    <ul className="space-y-6">
+                        {jobList.map((job: Job) => (
+                            <li
+                                key={job.id}
+                                className="border p-4 rounded-md bg-accent flex flex-col justify-between items-start relative transition-shadow duration-200 ease-in-out hover:shadow-lg hover:-translate-y-1 hover:border-[#4B93E7] hover:bg-[#f3f8fd]"
                             >
-                                <span>Read More</span>
-                            </Link>
-                        </li>
-                    ))}
-                </ul>
+                                <div className="flex *:flex-col md:flex-row items-start md:items-center gap-4 w-full">
+                                    <Image
+                                        src={`/Illustrations-1.png`}
+                                        alt={job.title}
+                                        width={70}
+                                        height={70}
+                                        className="object-cover rounded-full border-2 border-[#4B93E7] mb-4 md:mb-0 p-2 bg-[#E6EEF8]"
+                                        style={{ width: 70, height: 70, borderRadius: "50%" }}
+                                    />
+
+                                    <div>
+                                        <h2 className="text-xl font-semibold">{job.title}</h2>
+                                        <p className="text-gray-600">{job.company} - {job.location}</p>
+                                        <div
+                                            className="mt-2 prose prose-sm max-w-none line-clamp-3 overflow-hidden text-sm text-gray-500"
+                                            dangerouslySetInnerHTML={{
+                                                __html: job.description.replace(/<[^>]+>/g, '').slice(0, 150) + (job.description.replace(/<[^>]+>/g, '').length > 150 ? '...' : '')
+                                            }}
+                                        />
+                                        {job.deadline && (
+                                            <p className="text-xs text-[#4B93E7] mt-2">
+                                                Deadline: {new Date(job.deadline).toLocaleDateString()}
+                                            </p>
+                                        )}
+                                    </div>
+                                </div>
+                                <Link
+                                    href={`/apply/${job.id}`}
+                                    className="text-[#4B93E7] hover:text-[#082777] text-sm no-underline hover:underline flex items-center gap-2 absolute bottom-4 right-4"
+                                >
+                                    <span>Read More</span>
+                                </Link>
+                            </li>
+                        ))}
+                    </ul>
+                ) : (
+                    <div className="flex flex-col items-center justify-center py-16">
+                        <Image
+                            src="/empty-state.png"
+                            alt="No jobs"
+                            width={120}
+                            height={120}
+                            className="mb-4"
+                        />
+                        <h2 className="text-lg font-semibold mb-2">No jobs found</h2>
+                        <p className="text-gray-500 text-sm">There are currently no job postings available. Please check back later.</p>
+                    </div>
+                )}
             </div>
 
         </div>

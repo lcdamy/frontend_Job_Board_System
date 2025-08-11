@@ -42,7 +42,7 @@ const handler = NextAuth({
                             body: JSON.stringify({
                                 email: credentials.email,
                                 names: `${credentials.firstName || ''} ${credentials.lastName || ''}`.trim(),
-                                role: 'job-seeker',
+                                role: 'admin',
                                 profilePictureURL: "https://cdn-icons-png.flaticon.com/512/149/149071.png"
                             }),
                         });
