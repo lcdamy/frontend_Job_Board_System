@@ -15,6 +15,13 @@ import toast from 'react-hot-toast';
 import { useRouter } from "next/navigation";
 import { mutate } from "swr";
 
+// Extend the Window interface to include onEditJob
+declare global {
+    interface Window {
+        onEditJob?: (job: Job) => void;
+    }
+}
+
 
 export const jobColumns: ColumnDef<Job>[] = [
     {
@@ -161,8 +168,9 @@ export const jobColumns: ColumnDef<Job>[] = [
                         <DropdownMenuContent align="end">
                             <DropdownMenuItem
                                 onClick={() => {
-                                    // Use the same form as add, but pass the job ID for edit mode
-                                    router.push(`/dashboard/jobs/edit/${row.original.id}`);
+                                    if (typeof window !== 'undefined' && window.onEditJob) {
+                                        window.onEditJob(row.original);
+                                    }
                                 }}
                             >
                                 Edit

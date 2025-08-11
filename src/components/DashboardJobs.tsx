@@ -1,14 +1,26 @@
 'use client'
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
+import type { Job } from '@/lib/types';
 import { DataTable } from '@/components/table/data-table'
 import { jobColumns } from '@/components/table/columns'
 import { Skeleton } from "@/components/ui/skeleton"
 import { useGetJobs } from '@/hooks/useGetJobs';
-export default function DashboardJobs() {
+import DashboardHeader from './DashboardHeader';
 
+export default function DashboardJobs() {
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
     const { jobs, total, error, isLoading, sessionStatus } = useGetJobs(page, pageSize);
+
+    // State for editing
+    const [jobToEdit, setJobToEdit] = useState<Job | null>(null);
+
+    // Expose the edit handler globally for the table columns
+    useEffect(() => {
+        window.onEditJob = (job) => setJobToEdit(job);
+        return () => { window.onEditJob = undefined; }
+    }, []);
+
     if (isLoading || sessionStatus === 'loading') {
         return (
             <div className="container mx-auto flex justify-center items-center h-64 mt-24">
@@ -48,14 +60,15 @@ export default function DashboardJobs() {
     }
     return (
         <div className="container mx-auto">
+            <DashboardHeader jobToEdit={jobToEdit} onEditJob={setJobToEdit} />
             <DataTable
-            columns={jobColumns}
-            data={jobs?.data ?? []}
-            page={page}
-            pageSize={pageSize}
-            total={total}
-            setPage={setPage}
-            setPageSize={setPageSize}
+                columns={jobColumns}
+                data={jobs?.data ?? []}
+                page={page}
+                pageSize={pageSize}
+                total={total}
+                setPage={setPage}
+                setPageSize={setPageSize}
             />
         </div>
     );

@@ -110,7 +110,7 @@ function Settings() {
                             <div className="flex-1 min-w-0">
                                 <DashboardUsers />
                             </div>
-                            <Card className="w-full md:w-[380px]">
+                            <Card className="w-full md:w-[380px] h-fit bg-[#E6EEF8]">
                                 <CardHeader className="text-lg font-semibold pb-2">
                                     <span className='border-b-4 border-[#F7AC25]'> Add a new admin</span>
 
@@ -203,8 +203,8 @@ function Settings() {
                                             <div className="flex flex-row gap-2 justify-end">
                                                 <Button
                                                     type="button"
+                                                    className="cursor-pointer"
                                                     variant="outline"
-                                                    className=""
                                                     disabled={loadingRegister}
                                                     onClick={() => formRef.current?.reset()}
                                                 >
