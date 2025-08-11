@@ -64,9 +64,6 @@ export default function JobDetailPage() {
         coverLetter: "",
     });
 
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        setForm({ ...form, [e.target.name]: e.target.value });
-    };
 
     const handleApply = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -389,7 +386,7 @@ export default function JobDetailPage() {
                                                                 formData.append("file", file);
 
                                                                 try {
-                                                                    const res = await fetch(`${apiUrl}/api/v1/upload`, {
+                                                                    const res = await fetch(`${apiUrl}/api/v1/application/upload`, {
                                                                         method: "POST",
                                                                         body: formData,
                                                                     });
@@ -397,7 +394,7 @@ export default function JobDetailPage() {
                                                                         const data = await res.json();
                                                                         setForm((prev) => ({
                                                                             ...prev,
-                                                                            resume: data.url,
+                                                                            resume: data.url + "|" + file.name, // append file name after url, separated by |
                                                                         }));
                                                                     } else {
                                                                         setError("Failed to upload resume");
@@ -423,7 +420,15 @@ export default function JobDetailPage() {
                                                     </label>
                                                     {form.resume && (
                                                         <div className="text-xs text-green-700 mt-1 break-all">
-                                                            Uploaded: <a href={form.resume} target="_blank" rel="noopener noreferrer" className="underline">{form.resume}</a>
+                                                            Uploaded:{" "}
+                                                            <a
+                                                                href={form.resume.split("|")[0]}
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
+                                                                className="underline"
+                                                            >
+                                                                {form.resume.split("|")[1] || form.resume.split("|")[0]}
+                                                            </a>
                                                         </div>
                                                     )}
                                                 </div>
@@ -443,7 +448,7 @@ export default function JobDetailPage() {
                                                                 formData.append("file", file);
 
                                                                 try {
-                                                                    const res = await fetch(`${apiUrl}/api/v1/upload`, {
+                                                                    const res = await fetch(`${apiUrl}/api/v1/application/upload`, {
                                                                         method: "POST",
                                                                         body: formData,
                                                                     });
@@ -451,7 +456,7 @@ export default function JobDetailPage() {
                                                                         const data = await res.json();
                                                                         setForm((prev) => ({
                                                                             ...prev,
-                                                                            coverLetter: data.url,
+                                                                            coverLetter: data.url + "|" + file.name, // append file name after url, separated by |
                                                                         }));
                                                                     } else {
                                                                         setError("Failed to upload cover letter");
@@ -477,7 +482,15 @@ export default function JobDetailPage() {
                                                     </label>
                                                     {form.coverLetter && (
                                                         <div className="text-xs text-green-700 mt-1 break-all">
-                                                            Uploaded: <a href={form.coverLetter} target="_blank" rel="noopener noreferrer" className="underline">{form.coverLetter}</a>
+                                                            Uploaded:{" "}
+                                                            <a
+                                                                href={form.coverLetter.split("|")[0]}
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
+                                                                className="underline"
+                                                            >
+                                                                {form.coverLetter.split("|")[1] || form.coverLetter.split("|")[0]}
+                                                            </a>
                                                         </div>
                                                     )}
                                                 </div>
