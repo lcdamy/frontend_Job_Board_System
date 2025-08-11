@@ -1,7 +1,7 @@
 export const tabs = [
   {
     title: 'Home',
-    url: '/',
+    url: '/dashboard',
     icon: '/side-home-Icon.svg'
   },
   {

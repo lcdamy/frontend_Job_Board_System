@@ -18,6 +18,30 @@ export type Job = {
     user?: unknown
 }
 
+export type User = {
+    id: string | number;
+    names: string;
+    email: string;
+    type: "admin" | "user";
+    registrationType: string;
+    profilePictureURL?: string;
+    createdAt?: string;
+    updatedAt?: string;
+    userStatus?: string;
+}
+
+export type Audit = {
+    id: number;
+    timestamp: string;
+    createdAt: string | null;
+    updatedAt: string | null;
+    doneBy: string;
+    ipAddress: string;
+    activity: string;
+    details: string;
+    status: string;
+}
+
 export type Candidate = {
     id: string;
     names: string;

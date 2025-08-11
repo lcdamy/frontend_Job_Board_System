@@ -24,7 +24,7 @@ export function AppSidebar() {
         <SidebarGroup >
           <SidebarGroupLabel className="flex flex-col gap-2 items-center mt-4 mb-16">
             <div className="flex items-center gap-2">
-              <Link href="/">
+              <Link href="/dashboard" className="flex items-center">
                 <Image
                   src="/logo.png"
                   alt="logo"

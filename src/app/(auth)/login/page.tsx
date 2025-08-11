@@ -13,7 +13,7 @@ export default function LoginPage() {
 
   useLayoutEffect(() => {
     if (status === 'authenticated') {
-      router.push('/')
+      router.push('/dashboard')
     }
   }, [status, router])
 

@@ -1,5 +1,5 @@
 "use client"
-import type { Job, Candidate, Onboarding } from "@/lib/types"
+import type { Job, Candidate, Onboarding, User, Audit } from "@/lib/types"
 import { ColumnDef } from "@tanstack/react-table"
 import { EllipsisVertical } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -322,4 +322,122 @@ export const onboardingColumns: ColumnDef<Onboarding>[] = [
             </div>
         ),
     },
+];
+
+export const userColumns: ColumnDef<User>[] = [
+    {
+        accessorKey: "names",
+        header: "Name",
+        cell: ({ row }) => (
+            <div className="flex items-center gap-4">
+                <Image
+                    src="/default-avatar.png"
+                    alt={row.getValue("names")}
+                    width={30}
+                    height={30}
+                    className="text-white rounded-full"
+                />
+                <div className="flex flex-col items-start gap-2">
+                    <span className="text-[#071C50] font-[600] text-[14px]">{row.getValue("names")}</span>
+                </div>
+            </div>
+        ),
+    },
+    {
+        accessorKey: "email",
+        header: "Email",
+        cell: ({ row }) => <span>{row.getValue("email")}</span>,
+    },
+    {
+        accessorKey: "type",
+        header: "Type",
+        cell: ({ row }) => (
+            <span
+                className={`py-1 px-2 rounded-md inline-block w-38 text-center ${row.getValue("type") === "admin"
+                    ? "bg-[#B0F1B6] text-[#087213]"
+                    : row.getValue("type") === "job-seeker"
+                        ? "bg-[#DDEAFB] text-[#071C50]"
+                        : "bg-[#FFD6D6] text-[#B00020]"
+                    }`}
+            >
+                {row.getValue("type")}
+            </span>
+        ),
+    },
+    {
+        accessorKey: "registrationType",
+        header: "Registration Type",
+        cell: ({ row }) => <span>{row.getValue("registrationType")}</span>,
+    },
+    {
+        accessorKey: "userStatus",
+        header: "Status",
+        cell: ({ row }) => (
+            <span
+                className={`py-1 px-2 rounded-md inline-block w-38 text-center ${row.getValue("userStatus") === "active"
+                    ? "bg-[#B0F1B6] text-[#087213]"
+                    : "bg-[#FFD6D6] text-[#B00020]"
+                    }`}
+            >
+                {row.getValue("userStatus")}
+            </span>
+        ),
+    },
+];
+
+export const auditColumns: ColumnDef<Audit>[] = [
+    {
+        accessorKey: "timestamp",
+        header: "Timestamp",
+        cell: ({ row }) => <span>{row.getValue("timestamp")}</span>,
+    },
+
+    {
+        accessorKey: "doneBy",
+        header: "Done By",
+        cell: ({ row }) => <span>{row.getValue("doneBy")}</span>,
+    },
+    {
+        accessorKey: "ipAddress",
+        header: "IP Address",
+        cell: ({ row }) => <span>{row.getValue("ipAddress")}</span>,
+    },
+    {
+        accessorKey: "activity",
+        header: "Activity",
+        cell: ({ row }) => (
+            <span
+                className={`py-1 px-2 rounded-md inline-block w-38 text-center ${row.getValue("activity") === "GET"
+                        ? "text-[#087213]"
+                        : row.getValue("activity") === "POST"
+                            ? "text-[#F7AC25]"
+                            : row.getValue("activity") === "DELETE"
+                                ? "text-[#B00020]"
+                                : ""
+                    }`}
+            >
+                {row.getValue("activity")}
+            </span>
+        ),
+    },
+    {
+        accessorKey: "status",
+        header: "Status",
+        cell: ({ row }) => (
+            <span
+                className={`py-1 px-2 rounded-md inline-block w-38 text-center ${row.getValue("status") === "success"
+                    ? "bg-[#B0F1B6] text-[#087213]"
+                    : "bg-[#FFD6D6] text-[#B00020]"
+                    }`}
+            >
+                {row.getValue("status")}
+            </span>
+        ),
+    },
+    {
+        accessorKey: "details",
+        header: "Details",
+        cell: ({ row }) => <span>{row.getValue("details")}</span>,
+    },
+
 ];

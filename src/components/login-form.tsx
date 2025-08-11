@@ -124,7 +124,7 @@ export function LoginForm({ className, activeTab, onTabChange, ...props }: Login
         return;
       } else {
         toast.success('Login successful!');
-        router.push('/');
+        router.push('/dashboard');
       }
     } catch (error) {
       console.error('An unexpected error happened:', error);
