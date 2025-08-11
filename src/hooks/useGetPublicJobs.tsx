@@ -7,7 +7,7 @@ export function useGetPublicJobs(page: number, pageSize: number) {
 
   const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
-  const endpoint = `${apiUrl}/api/v1/job/list?page=${page}&limit=${pageSize}`;
+  const endpoint = `${apiUrl}/api/v1/job/list`;
 
   const { data, error, isLoading } = useSWR(endpoint, fetcher);
 

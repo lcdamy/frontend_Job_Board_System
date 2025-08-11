@@ -13,7 +13,7 @@ type Job = {
 
 const fetchJob = async (jobId: string): Promise<Job | null> => {
     // Replace with your actual API endpoint
-    const res = await fetch(`/api/jobs/${jobId}`);
+    const res = await fetch(`/api/job/detail/${jobId}`);
     if (!res.ok) return null;
     return res.json();
 };

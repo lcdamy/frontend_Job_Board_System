@@ -11,6 +11,8 @@ import {
 } from "@/components/ui/dialog"
 import { Label } from "@/components/ui/label"
 import { useState, useRef, useEffect } from "react"
+import { EditorContent, useEditor } from '@tiptap/react';
+import StarterKit from '@tiptap/starter-kit';
 import { addNewJobSchema } from "@/lib/validation"
 import toast, { Toaster } from 'react-hot-toast';
 import { useSession } from 'next-auth/react';
@@ -24,14 +26,25 @@ function DashboardHeader({ jobToEdit = null, onEditJob = null }: { jobToEdit?: a
   const { data: session } = useSession();
   const accessToken = session?.user?.token;
 
+
   // Local state for form fields to support controlled components and prefill
   const [formState, setFormState] = useState({
     title: '',
-    description: '',
     company: '',
     location: '',
     deadline: '',
     type: '',
+  });
+
+  // Tiptap editor for description
+  const [description, setDescription] = useState('');
+  const editor = useEditor({
+    extensions: [StarterKit],
+    content: '',
+    onUpdate: ({ editor }) => {
+      setDescription(editor.getHTML());
+    },
+    immediatelyRender: false, // Fix SSR hydration error
   });
 
   // When jobToEdit changes, prefill form
@@ -39,26 +52,29 @@ function DashboardHeader({ jobToEdit = null, onEditJob = null }: { jobToEdit?: a
     if (jobToEdit) {
       setFormState({
         title: jobToEdit.title || '',
-        description: jobToEdit.description || '',
         company: jobToEdit.company || '',
         location: jobToEdit.location || '',
         deadline: jobToEdit.deadline ? jobToEdit.deadline.slice(0, 10) : '',
         type: jobToEdit.type || '',
       });
+      setDescription(jobToEdit.description || '');
+      if (editor) editor.commands.setContent(jobToEdit.description || '');
       setDialogOpen(true);
     } else {
       setFormState({
         title: '',
-        description: '',
         company: '',
         location: '',
         deadline: '',
         type: '',
       });
+      setDescription('');
+      if (editor) editor.commands.setContent('');
     }
-  }, [jobToEdit]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [jobToEdit, editor]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormState((prev) => ({ ...prev, [name]: value }));
   };
@@ -67,8 +83,8 @@ function DashboardHeader({ jobToEdit = null, onEditJob = null }: { jobToEdit?: a
     e.preventDefault();
     setLoadingJob(true);
 
-    const { title, description, company, location, deadline, type } = formState;
-
+    const { title, company, location, deadline, type } = formState;
+    // Use description from Tiptap
     const { error } = addNewJobSchema.validate({
       title,
       description,
@@ -131,12 +147,13 @@ function DashboardHeader({ jobToEdit = null, onEditJob = null }: { jobToEdit?: a
         mutate((key) => typeof key === 'string' && key.includes('/api/v1/job/list'));
         setFormState({
           title: '',
-          description: '',
           company: '',
           location: '',
           deadline: '',
           type: '',
         });
+        setDescription('');
+        if (editor) editor.commands.setContent('');
         if (formRef.current) formRef.current.reset();
         setDialogOpen(false);
         if (onEditJob) onEditJob(null); // clear edit state in parent
@@ -155,12 +172,13 @@ function DashboardHeader({ jobToEdit = null, onEditJob = null }: { jobToEdit?: a
     setDialogOpen(true);
     setFormState({
       title: '',
-      description: '',
       company: '',
       location: '',
       deadline: '',
       type: '',
     });
+    setDescription('');
+    if (editor) editor.commands.setContent('');
     if (onEditJob) onEditJob(null); // clear edit state in parent
   };
 
@@ -202,35 +220,33 @@ function DashboardHeader({ jobToEdit = null, onEditJob = null }: { jobToEdit?: a
                   Job Title
                 </Label>
               </div>
+
                 <div className="relative">
-                  <textarea
-                    id="description"
-                    name="description"
-                    required
-                    rows={5}
-                    className="block px-2 pb-2 pt-3 w-full text-xs text-gray-900 bg-[#DDEAFB] rounded-lg border border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer placeholder:text-[#082777] resize-y min-h-[120px]"
-                    placeholder=""
-                    value={formState.description}
-                    onChange={handleChange}
-                  />
-                  <Label
-                    htmlFor="description"
-                    className="absolute left-2 text-xs text-[#082777] duration-300 transform -translate-y-3 scale-75 top-2 z-10 origin-[0] bg-[#DDEAFB] px-1 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-3"
-                  >
-                    Write Job Description
-                  </Label>
+                <div
+                  className="block px-2 pb-2 pt-3 w-full min-h-[160px] max-h-[240px] overflow-y-auto text-xs text-gray-900 bg-[#DDEAFB] border border-gray-300 appearance-none dark:text-white dark:border-gray-600 placeholder:text-[#082777] rounded-lg"
+                >
+                  <EditorContent editor={editor} />
                 </div>
-                <div className="relative">
-                  <input
-                    type="text"
-                    id="company"
-                    name="company"
-                    className="block px-2 pb-2 pt-3 w-full text-xs text-gray-900 bg-[#DDEAFB] rounded-lg border border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer placeholder:text-[#082777]"
-                    placeholder=""
-                    required
-                    value={formState.company}
-                    onChange={handleChange}
-                  />
+                <Label
+                  htmlFor="description"
+                  className="absolute text-[#082777] duration-300 transform -translate-y-3 scale-75 top-2 z-10 origin-[0] bg-[#DDEAFB] px-1 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-3 start-1"
+                >
+                  Description
+                </Label>
+                </div>
+
+
+              <div className="relative">
+                <input
+                  type="text"
+                  id="company"
+                  name="company"
+                  className="block px-2 pb-2 pt-3 w-full text-xs text-gray-900 bg-[#DDEAFB] rounded-lg border border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer placeholder:text-[#082777]"
+                  placeholder=""
+                  required
+                  value={formState.company}
+                  onChange={handleChange}
+                />
                 <Label
                   htmlFor="company"
                   className="absolute text-xs text-[#082777] duration-300 transform -translate-y-3 scale-75 top-2 z-10 origin-[0] bg-[#DDEAFB] px-1 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-3 start-1"
@@ -306,12 +322,12 @@ function DashboardHeader({ jobToEdit = null, onEditJob = null }: { jobToEdit?: a
                   onClick={() => {
                     setFormState({
                       title: '',
-                      description: '',
                       company: '',
                       location: '',
                       deadline: '',
                       type: '',
                     });
+                    setDescription('');
                     if (formRef.current) formRef.current.reset();
                     setDialogOpen(false);
                     if (onEditJob) onEditJob(null);

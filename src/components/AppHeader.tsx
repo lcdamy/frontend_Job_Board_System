@@ -10,6 +10,7 @@ import { ChevronDown, Search } from 'lucide-react';
 import { signOut, signIn } from 'next-auth/react'
 import { useSession } from 'next-auth/react';
 import { Skeleton } from "@/components/ui/skeleton"
+import Link from 'next/link'
 
 function AppHeader() {
   const router = useRouter()
@@ -101,10 +102,10 @@ function AppHeader() {
               <div className="absolute right-0 mt-2 w-40 bg-white border rounded shadow-lg z-10 ">
                 <button
                   className="w-full text-left px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                  onClick={() => router.push('#')}
+                  onClick={() => router.push('/')}
                 >
                   <span className="hidden md:block">
-                    Profile
+                    Visit Open Jobs
                   </span>
                     <span className="block md:hidden">{session?.user?.name}</span>
                 </button>
