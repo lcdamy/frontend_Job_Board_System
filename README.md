@@ -7,7 +7,7 @@ This is a client-side application for the Job Boarding System, built with Next.j
 ## 🔗 Live Preview
 
 You can view a live version of this frontend (if deployed) at:  
-👉 [https://frontend-job-boarding-system.netlify.app](https://frontend-job-boarding-system.netlify.app)
+👉 [https://frontend-job-board-system.netlify.app](https://frontend-job-board-system.netlify.app)
 
 ## 🚀 Getting Started
 
