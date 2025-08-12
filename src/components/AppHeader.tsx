@@ -11,6 +11,8 @@ import { signOut, signIn } from 'next-auth/react'
 import { useSession } from 'next-auth/react';
 import { Skeleton } from "@/components/ui/skeleton"
 import Link from 'next/link'
+import { IoLogOut } from "react-icons/io5";
+import { FaClipboardList } from 'react-icons/fa';
 
 function AppHeader() {
   const router = useRouter()
@@ -99,21 +101,23 @@ function AppHeader() {
                 <span className="hidden md:inline text-[#071C50] font-[600] text-sm"> {session?.user?.name} </span>
                 <ChevronDown className='text-[#071C50]/50' />
               </summary>
-              <div className="absolute right-0 mt-2 w-40 bg-white border rounded shadow-lg z-10 ">
+              <div className="absolute right-0 mt-2 w-40 bg-white border rounded shadow-lg z-10 text-xs">
                 <button
-                  className="w-full text-left px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                  className="w-full text-left px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2"
                   onClick={() => router.push('/')}
                 >
+                  <FaClipboardList />
                   <span className="hidden md:block">
                     Visit Open Jobs
                   </span>
-                    <span className="block md:hidden">{session?.user?.name}</span>
+                  <span className="block md:hidden">{session?.user?.name}</span>
                 </button>
                 <button
-                  className="w-full text-left px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                  className="w-full text-left px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2"
                   onClick={logout}
                 >
-                  Logout
+                  <IoLogOut className="inline-block" />
+                  <span>Logout</span>
                 </button>
               </div>
             </details>
