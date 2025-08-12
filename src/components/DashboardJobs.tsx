@@ -59,7 +59,7 @@ export default function DashboardJobs() {
         );
     }
     return (
-        <div className="container mx-auto">
+        <div className="flex flex-col w-full">
             <DashboardHeader jobToEdit={jobToEdit} onEditJob={setJobToEdit} />
             <DataTable
                 columns={jobColumns}

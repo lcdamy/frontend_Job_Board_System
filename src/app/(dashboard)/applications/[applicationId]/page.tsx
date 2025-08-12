@@ -48,7 +48,6 @@ export default function Page() {
 
   if (loading) return (
     <div className="flex flex-col lg:flex-row gap-4 p-2 sm:p-4">
-      <div className="flex flex-col w-full"></div>
       <div className="bg-white rounded-lg shadow p-6 flex flex-col gap-6">
         {/* Candidate Info Skeleton */}
         <div className="flex flex-col sm:flex-row sm:items-center gap-4 border-b pb-4">
