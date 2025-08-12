@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/accordion"
 import { MoveLeft } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
+import toast, { Toaster } from 'react-hot-toast';
 
 type Job = {
     id: number;
@@ -40,7 +41,6 @@ export default function JobDetailPage() {
     const [job, setJob] = useState<Job | null>(null);
     const [loading, setLoading] = useState(true);
     const [applied, setApplied] = useState(false);
-    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         if (!jobId) return;
@@ -53,37 +53,47 @@ export default function JobDetailPage() {
                     setJob(null);
                 }
             })
-            .catch(() => setError("Failed to load job details"))
+            .catch(() =>{
+               toast.error("Failed to load job details");
+            })
             .finally(() => setLoading(false));
     }, [jobId]);
 
     const [form, setForm] = useState({
-        fullname: "",
+        phoneNumber: "",
+        jobId: jobId,
+        jobTitle: "",
+        names: "",
         email: "",
-        resume: "",
+        resumeURL: "",
         coverLetter: "",
+        linkedInProfile: "",
     });
 
 
     const handleApply = async (e: React.FormEvent) => {
         e.preventDefault();
-        setError(null);
+
         try {
-            const res = await fetch(`${apiUrl}/api/v1/job/${jobId}/apply`, {
+            const payload = {
+                ...form,
+                jobTitle: job?.title || "",
+            };
+            const res = await fetch(`${apiUrl}/api/v1/application/create`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify(form),
+                body: JSON.stringify(payload),
             });
             if (res.ok) {
                 setApplied(true);
             } else {
                 const data = await res.json();
-                setError(data?.message || "Failed to apply for the job");
+                toast.error(data?.message || "Failed to apply for the job");
             }
         } catch (err) {
-            setError("Failed to apply for the job");
+            toast.error("Failed to apply for the job");
         }
     };
 
@@ -174,21 +184,6 @@ export default function JobDetailPage() {
         </div>
     );
 
-    if (error) {
-        return (
-            <div className="container mx-auto flex justify-center items-center h-64">
-                <div className="flex flex-col items-center">
-                    <svg className="w-12 h-12 text-red-500 mb-2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                        <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" fill="none" />
-                        <line x1="12" y1="8" x2="12" y2="13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-                        <circle cx="12" cy="16" r="1" fill="currentColor" />
-                    </svg>
-                    <span className="text-red-600 font-light text-lg">Error loading job</span>
-                    <span className="text-gray-500 mt-1 text-sm">Please try refreshing the page or check your connection.</span>
-                </div>
-            </div>
-        );
-    }
 
     if (!job) {
         return (
@@ -323,14 +318,16 @@ export default function JobDetailPage() {
                                                 <div className="relative">
                                                     <input
                                                         type="text"
-                                                        id="fullname"
-                                                        name="fullname"
+                                                        id="names"
+                                                        name="names"
+                                                        value={form.names}
+                                                        onChange={(e) => setForm((prev) => ({ ...prev, names: e.target.value }))}
                                                         className="block px-2 pb-2 pt-3 w-full text-xs text-gray-900 bg-[#DDEAFB] rounded-lg border border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer placeholder:text-[#082777]"
                                                         placeholder=""
                                                         required
                                                     />
                                                     <label
-                                                        htmlFor="fullname"
+                                                        htmlFor="names"
                                                         className="absolute text-xs text-[#082777] duration-300 transform -translate-y-3 scale-75 top-2 z-10 origin-[0] bg-[#DDEAFB] px-1 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-3 start-1"
                                                     >
                                                         Full Name
@@ -341,6 +338,8 @@ export default function JobDetailPage() {
                                                         type="email"
                                                         id="email"
                                                         name="email"
+                                                        value={form.email}
+                                                        onChange={(e) => setForm((prev) => ({ ...prev, email: e.target.value }))}
                                                         className="block px-2 pb-2 pt-3 w-full text-xs text-gray-900 bg-[#DDEAFB] rounded-lg border border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer placeholder:text-[#082777]"
                                                         placeholder=""
                                                         required
@@ -357,6 +356,13 @@ export default function JobDetailPage() {
                                                         type="tel"
                                                         id="phoneNumber"
                                                         name="phoneNumber"
+                                                        value={form.phoneNumber}
+                                                        onChange={(e) =>
+                                                            setForm((prev) => ({
+                                                                ...prev,
+                                                                phoneNumber: e.target.value,
+                                                            }))
+                                                        }
                                                         className="block px-2 pb-2 pt-3 w-full text-xs text-gray-900 bg-[#DDEAFB] rounded-lg border border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer placeholder:text-[#082777]"
                                                         placeholder=""
                                                         required
@@ -375,8 +381,8 @@ export default function JobDetailPage() {
                                                 <div className="relative">
                                                     <input
                                                         type="file"
-                                                        id="resume"
-                                                        name="resume"
+                                                        id="resumeUrl"
+                                                        name="resumeUrl"
                                                         className="hidden"
                                                         accept=".pdf,.doc,.docx"
                                                         onChange={async (e) => {
@@ -394,13 +400,13 @@ export default function JobDetailPage() {
                                                                         const data = await res.json();
                                                                         setForm((prev) => ({
                                                                             ...prev,
-                                                                            resume: data.url + "|" + file.name, // append file name after url, separated by |
+                                                                            resumeURL: data?.data?.url
                                                                         }));
                                                                     } else {
-                                                                        setError("Failed to upload resume");
+                                                                        toast.error("Failed to upload resume");
                                                                     }
                                                                 } catch {
-                                                                    setError("Failed to upload resume");
+                                                                    toast.error("Failed to upload resume");
                                                                 }
                                                             }
                                                         }}
@@ -413,21 +419,21 @@ export default function JobDetailPage() {
                                                             type="button"
                                                             variant="outline"
                                                             className="bg-[#DDEAFB]"
-                                                            onClick={() => document.getElementById("resume")?.click()}
+                                                            onClick={() => document.getElementById("resumeUrl")?.click()}
                                                         >
-                                                            {form.resume ? "Re-upload Resume" : "Upload Resume"}
+                                                            {form.resumeURL ? "Re-upload Resume" : "Upload Resume"}
                                                         </Button>
                                                     </label>
-                                                    {form.resume && (
+                                                    {form.resumeURL && (
                                                         <div className="text-xs text-green-700 mt-1 break-all">
                                                             Uploaded:{" "}
                                                             <a
-                                                                href={form.resume.split("|")[0]}
+                                                                href={form.resumeURL}
                                                                 target="_blank"
                                                                 rel="noopener noreferrer"
                                                                 className="underline"
                                                             >
-                                                                {form.resume.split("|")[1] || form.resume.split("|")[0]}
+                                                                {form.resumeURL.split("|")[1] || form.resumeURL.split("|")[0]}
                                                             </a>
                                                         </div>
                                                     )}
@@ -456,13 +462,13 @@ export default function JobDetailPage() {
                                                                         const data = await res.json();
                                                                         setForm((prev) => ({
                                                                             ...prev,
-                                                                            coverLetter: data.url + "|" + file.name, // append file name after url, separated by |
+                                                                            coverLetter: data?.data?.url
                                                                         }));
                                                                     } else {
-                                                                        setError("Failed to upload cover letter");
+                                                                        toast.error("Failed to upload cover letter");
                                                                     }
                                                                 } catch {
-                                                                    setError("Failed to upload cover letter");
+                                                                    toast.error("Failed to upload cover letter");
                                                                 }
                                                             }
                                                         }}
@@ -499,6 +505,13 @@ export default function JobDetailPage() {
                                                         type="url"
                                                         id="linkedInProfile"
                                                         name="linkedInProfile"
+                                                        value={form.linkedInProfile}
+                                                        onChange={(e) =>
+                                                            setForm((prev) => ({
+                                                                ...prev,
+                                                                linkedInProfile: e.target.value,
+                                                            }))
+                                                        }
                                                         className="block px-2 pb-2 pt-3 w-full text-xs text-gray-900 bg-[#DDEAFB] rounded-lg border border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer placeholder:text-[#082777]"
                                                         placeholder=""
                                                         required
@@ -513,19 +526,20 @@ export default function JobDetailPage() {
                                             </div>
                                             {/* Error and submit button (full width) */}
                                             <div className="md:col-span-2 flex flex-col gap-2">
-                                                {error && (
-                                                    <div className="text-red-600 text-sm">{error}</div>
-                                                )}
                                                 <div className="flex gap-2 justify-end">
                                                     <Button
                                                         type="button"
                                                         variant="outline"
                                                         className=""
                                                         onClick={() => setForm({
-                                                            fullname: "",
+                                                            phoneNumber: "",
+                                                            jobId: jobId,
+                                                            names: "",
                                                             email: "",
-                                                            resume: "",
-                                                            coverLetter: ""
+                                                            resumeURL: "",
+                                                            coverLetter: "",
+                                                            jobTitle: "",
+                                                            linkedInProfile: "",
                                                         })}>
                                                         Cancel
                                                     </Button>
@@ -537,7 +551,11 @@ export default function JobDetailPage() {
                                                     </Button>
                                                 </div>
                                             </div>
+                                            <div>
+                                                <Toaster position="top-right" />
+                                            </div>
                                         </form>
+
                                     )}
                                 </CardContent>
                             </Card>
