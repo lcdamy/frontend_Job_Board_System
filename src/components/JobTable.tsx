@@ -1,6 +1,6 @@
 import React from "react";
 import DashboardJobs from "@/components/DashboardJobs";
-import DashboardCandidates from "@/components/DashboardCandidates"
+import DashboardCandidates from "@/components/DashboardApplication"
 import {
     Tabs,
     TabsContent,

@@ -230,7 +230,7 @@ export default function JobDetailPage() {
                     type="single"
                     collapsible
                     className="w-full"
-                    defaultValue="item-1"
+                    defaultValue="item-2"
                 >
 
                     <AccordionItem value="item-1">

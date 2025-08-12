@@ -128,7 +128,7 @@ export default function JobListPage() {
                                     href={`/apply/${job.id}`}
                                     className="text-[#4B93E7] hover:text-[#082777] text-sm no-underline hover:underline flex items-center gap-2 absolute bottom-4 right-4"
                                 >
-                                    <span>Read More</span>
+                                    <span>Apply for this job</span>
                                 </Link>
                             </li>
                         ))}

@@ -1,10 +1,13 @@
 'use client'
+import React, { useState, useEffect } from "react"
 import { DataTable } from '@/components/table/data-table'
-import { candidateColumns } from '@/components/table/columns'
+import { applicationColumns } from '@/components/table/columns'
 import { Skeleton } from "@/components/ui/skeleton"
 import { useGetApplications } from '@/hooks/useGetApplications'
-export default function DashboardCandidates() {
-    const { applications, error, isLoading, sessionStatus } = useGetApplications()
+export default function DashboardApplication() {
+    const [page, setPage] = useState(1);
+    const [pageSize, setPageSize] = useState(10);
+    const { applications, total, error, isLoading, sessionStatus } = useGetApplications(page, pageSize);
 
     if (isLoading || sessionStatus == 'loading') {
         return (
@@ -47,7 +50,15 @@ export default function DashboardCandidates() {
 
     return (
         <div className="container mx-auto">
-            <DataTable columns={candidateColumns} data={applications?.data?.data || []} />
+                    <DataTable
+                            columns={applicationColumns}
+                            data={applications?.data ?? []}
+                            page={page}
+                            pageSize={pageSize}
+                            total={total}
+                            setPage={setPage}
+                            setPageSize={setPageSize}
+                        />
         </div>
     )
 }

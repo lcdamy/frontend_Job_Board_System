@@ -1,5 +1,5 @@
 "use client"
-import type { Job, Candidate, User, Audit } from "@/lib/types"
+import type { Job, JobApplication, User, Audit } from "@/lib/types"
 import { ColumnDef } from "@tanstack/react-table"
 import { EllipsisVertical } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -129,11 +129,10 @@ export const jobColumns: ColumnDef<Job>[] = [
         header: "Status",
         cell: ({ row }) => (
             <span
-                className={`py-1 px-2 rounded-md inline-block w-38 text-center ${
-                    row.getValue("status") === "open"
-                        ? "bg-[#B0F1B6] text-[#087213]"
-                        : "bg-[#FFD6D6] text-[#B00020]"
-                }`}
+                className={`py-1 px-2 rounded-md inline-block w-38 text-center ${row.getValue("status") === "open"
+                    ? "bg-[#B0F1B6] text-[#087213]"
+                    : "bg-[#FFD6D6] text-[#B00020]"
+                    }`}
             >
                 {row.getValue("status") || "-"}
             </span>
@@ -152,7 +151,6 @@ export const jobColumns: ColumnDef<Job>[] = [
         id: "actions",
         cell: ({ row }) => {
             const { data: session } = useSession();
-            const router = useRouter();
             return (
                 <div className="flex justify-end">
                     <DropdownMenu>
@@ -266,14 +264,14 @@ export const jobColumns: ColumnDef<Job>[] = [
     },
 ];
 
-export const candidateColumns: ColumnDef<Candidate>[] = [
+export const applicationColumns: ColumnDef<JobApplication>[] = [
     {
         accessorKey: "names",
-        header: "",
+        header: "Name",
         cell: ({ row }) => (
             <div className="flex items-center gap-4">
                 <Image
-                    src={row.original.profileURL || "/default-avatar.png"}
+                    src="/default-avatar.png"
                     alt={row.getValue("names")}
                     width={30}
                     height={30}
@@ -281,108 +279,86 @@ export const candidateColumns: ColumnDef<Candidate>[] = [
                 />
                 <div className="flex flex-col items-start gap-2">
                     <span className="text-[#071C50] font-[600] text-[14px]">{row.getValue("names")}</span>
-                    <span className="text-xs text-[#071C50]/50 font-[300]">
-                        {row.original.title || "-"}
-                    </span>
                 </div>
             </div>
         ),
     },
     {
-        accessorKey: "createdAt",
-        header: "Onboarding On",
-        cell: ({ row }) =>
-            <span>
-                {(() => {
-                    const dateStr = row.getValue("createdAt");
-                    if (!dateStr) return "-";
-                    const date = new Date(dateStr as string);
-                    return date.toLocaleDateString("en-US", {
-                        month: "short",
-                        day: "2-digit",
-                        year: "numeric",
-                    });
-                })()}
-            </span>
-    },
-
-    {
-        accessorKey: "tranings",
-        header: "Training",
-        cell: ({ row }) => <span>{row.getValue("tranings") || "-"}</span>,
+        accessorKey: "email",
+        header: "Email",
+        cell: ({ row }) => <span>{row.getValue("email") || "-"}</span>,
     },
     {
-        accessorKey: "documentation",
-        header: "Documentation",
-        cell: ({ row }) => <span>{row.getValue("tranings") || "-"}</span>,
+        accessorKey: "phoneNumber",
+        header: "Phone",
+        cell: ({ row }) => <span>{row.getValue("phoneNumber") || "-"}</span>,
     },
     {
-        accessorKey: "supervisor",
-        header: "Supervisor",
+        accessorKey: "jobTitle",
+        header: "Job Title",
+        cell: ({ row }) => <span>{row.getValue("jobTitle") || "-"}</span>,
+    },
+    {
+        accessorKey: "appliedAt",
+        header: "Applied On",
         cell: ({ row }) => {
-            const supervisor = row.getValue("supervisor");
-            return supervisor ? (
-                <div className="flex justify-center">
-                    <span className="flex items-center gap-2 py-1 px-2 rounded-md w-38 bg-[#DDEAFB] text-[#071C50]">
-                        <Image
-                            src={row.original.supervisorProfile || "/default-avatar.png"}
-                            alt={row.getValue("supervisor")}
-                            width={24}
-                            height={24}
-                            className="rounded-full"
-                        />
-                        {row.getValue("supervisor")}
-                    </span>
-                </div>
-            ) : (
-                <div className="flex justify-center">
-                    <span className="py-1 px-2 rounded-md inline-block w-38 bg-[#FFD6D6] text-[#B00020]">
-                        Not Provided
-                    </span>
-                </div>
-            )
-        }
+            const dateStr = row.getValue("appliedAt");
+            if (!dateStr) return "-";
+            const date = new Date(dateStr as string);
+            return date.toLocaleDateString("en-US", {
+                month: "short",
+                day: "2-digit",
+                year: "numeric",
+            });
+        },
     },
     {
-        accessorKey: "project",
-        header: "Project",
-        cell: ({ row }) =>
+        accessorKey: "status",
+        header: "Status",
+        cell: ({ row }) => (
             <span
-                className={`py-1 px-2 rounded-md inline-block w-38 text-center ${row.getValue("project")
-                    ? "bg-[#B0F1B6] text-[#087213]"
-                    : "bg-[#FFD6D6] text-[#B00020]"
+                className={`py-1 px-2 rounded-md inline-block w-38 text-center ${row.getValue("status") === "pending"
+                    ? "bg-[#FFF4B5] text-[#B87333]"
+                    : row.getValue("status") === "accepted"
+                        ? "bg-[#B0F1B6] text-[#087213]"
+                        : row.getValue("status") === "rejected"
+                            ? "bg-[#FFD6D6] text-[#B00020]"
+                            : "bg-gray-100 text-gray-500"
                     }`}
             >
-                {row.getValue("project") || "Not Allocated"}
+                {row.getValue("status") || "-"}
             </span>
+        ),
     },
     {
         id: "actions",
-        cell: ({ row }) => (
-            <div className="flex justify-end">
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button
-                            variant="ghost"
-                            className="h-8 w-8 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
-                        >
-                            <span className="sr-only">Open menu</span>
-                            <EllipsisVertical className="h-4 w-4" />
-                        </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                        <DropdownMenuItem
-                            onClick={() => console.log("Edit candidate", row.original)}
-                        > Edit
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                            onClick={() => console.log("Delete candidate", row.original)}
-                        > Delete
-                        </DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
-            </div>
-        ),
+        cell: ({ row }) => {
+            const router = useRouter();
+            return (
+                <div className="flex justify-end">
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button
+                                variant="ghost"
+                                className="h-8 w-8 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                            >
+                                <span className="sr-only">Open menu</span>
+                                <EllipsisVertical className="h-4 w-4" />
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                            <DropdownMenuItem
+                                onClick={() => {
+                                    router.push(`/applications/${row.original.id}`);
+                                }}
+                            >
+                                view
+                            </DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                </div>
+            )
+        },
     },
 ];
 
@@ -470,12 +446,12 @@ export const auditColumns: ColumnDef<Audit>[] = [
         cell: ({ row }) => (
             <span
                 className={`py-1 px-2 rounded-md inline-block w-38 text-center ${row.getValue("activity") === "GET"
-                        ? "text-[#087213]"
-                        : row.getValue("activity") === "POST"
-                            ? "text-[#F7AC25]"
-                            : row.getValue("activity") === "DELETE"
-                                ? "text-[#B00020]"
-                                : ""
+                    ? "text-[#087213]"
+                    : row.getValue("activity") === "POST"
+                        ? "text-[#F7AC25]"
+                        : row.getValue("activity") === "DELETE"
+                            ? "text-[#B00020]"
+                            : ""
                     }`}
             >
                 {row.getValue("activity")}

@@ -53,26 +53,6 @@ export type Audit = {
     status: string;
 }
 
-export type Candidate = {
-    id: string;
-    names: string;
-    gender: "male" | "female";
-    email: string;
-    phoneNumber?: string;
-    title?: string;
-    linkedinURL?: string;
-    profileURL?: string;
-    tranings?: string;
-    documentation?: string;
-    supervisor?: string | null;
-    supervisorProfile?: string | null;
-    project?: string | null;
-    educations?: object[];
-    experiences?: object[];
-    createdAt?: string;
-    updatedAt?: string;
-}
-
 export type Onboarding = {
     id: number
     name: string
