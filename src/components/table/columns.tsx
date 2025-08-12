@@ -317,14 +317,21 @@ export const applicationColumns: ColumnDef<JobApplication>[] = [
         header: "Status",
         cell: ({ row }) => (
             <span
-                className={`py-1 px-2 rounded-md inline-block w-38 text-center ${row.getValue("status") === "pending"
-                    ? "bg-[#FFF4B5] text-[#B87333]"
-                    : row.getValue("status") === "accepted"
-                        ? "bg-[#B0F1B6] text-[#087213]"
+                className={`py-1 px-2 rounded-md inline-block w-38 text-center ${
+                    row.getValue("status") === "pending"
+                        ? "bg-yellow-100"
+                        : row.getValue("status") === "under-review"
+                        ? "bg-blue-100"
+                        : row.getValue("status") === "interview-scheduled"
+                        ? "bg-purple-100"
+                        : row.getValue("status") === "offer-made"
+                        ? "bg-green-100"
                         : row.getValue("status") === "rejected"
-                            ? "bg-[#FFD6D6] text-[#B00020]"
-                            : "bg-gray-100 text-gray-500"
-                    }`}
+                        ? "bg-red-100"
+                        : row.getValue("status") === "accepted"
+                        ? "bg-emerald-100"
+                        : "bg-gray-100"
+                }`}
             >
                 {row.getValue("status") || "-"}
             </span>

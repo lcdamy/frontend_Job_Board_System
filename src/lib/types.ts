@@ -1,10 +1,18 @@
+export type JobApplicationStatus =
+    | "under-review"
+    | "interview-scheduled"
+    | "offer-made"
+    | "rejected"
+    | "accepted"
+    | "pending";
+
 export type JobApplication = {
     id: number;
     jobId: number;
     userId: number;
     coverLetter: string;
     resumeURL: string;
-    status: string;
+    status: JobApplicationStatus;
     phoneNumber: string;
     email: string;
     linkedInProfile: string;

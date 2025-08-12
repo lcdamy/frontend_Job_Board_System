@@ -1,7 +1,6 @@
 'use client'
 import React from "react"
 import { useGetPublicJobs } from "@/hooks/useGetPublicJobs";
-import { Button } from "@/components/ui/button";
 import Link from 'next/link'
 import Image from "next/image";
 import { Skeleton } from "@/components/ui/skeleton"

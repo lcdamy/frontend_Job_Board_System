@@ -7,12 +7,12 @@ export const tabs = [
   {
     title: 'Applications',
     url: '/applications',
-    icon: '/side-candidate-Icon.svg'
+    icon: '/side-job-Icon.svg'
   },
   {
     title: 'Parameters',
     url: '/parameters',
-    icon: '/side-setting-Icon.svg'
+    icon: '/side-candidate-Icon.svg'
   }
 ]
 

@@ -13,20 +13,10 @@ import {
 import { MoveLeft } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import toast, { Toaster } from 'react-hot-toast';
+import { Job } from "@/lib/types";
 
-type Job = {
-    id: number;
-    title: string;
-    description: string;
-    company: string;
-    location: string;
-    deadline: string;
-    status: string;
-    type: string;
-    postedBy: number;
-    createdAt: string;
-    updatedAt: string;
-};
+
+
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
@@ -53,8 +43,8 @@ export default function JobDetailPage() {
                     setJob(null);
                 }
             })
-            .catch(() =>{
-               toast.error("Failed to load job details");
+            .catch(() => {
+                toast.error("Failed to load job details");
             })
             .finally(() => setLoading(false));
     }, [jobId]);
@@ -195,12 +185,14 @@ export default function JobDetailPage() {
                 </svg>
                 <span className="text-xl font-semibold text-gray-700 mb-1">Job Not Found</span>
                 <span className="text-gray-500 mb-2">We couldn't find the job you're looking for.</span>
-                <a
-                    href="/jobs"
-                    className="inline-block mt-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
-                >
-                    Back to Jobs
-                </a>
+                <Link href="/" passHref>
+                    <Button
+                        variant="default"
+                        className="mt-4 transition-all duration-200 bg-[#4B93E7] hover:bg-[#082777] hover:scale-105 hover:shadow-lg text-white cursor-pointer"
+                    >
+                        Back to Jobs
+                    </Button>
+                </Link>
             </div>
         );
     }
