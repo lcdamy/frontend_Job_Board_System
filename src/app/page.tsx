@@ -4,6 +4,8 @@ import { useGetPublicJobs } from "@/hooks/useGetPublicJobs";
 import Link from 'next/link'
 import Image from "next/image";
 import { Skeleton } from "@/components/ui/skeleton"
+import { Label } from "@/components/ui/label"
+import { useGetJobsLocations } from "@/hooks/useGetJobsLocations";
 
 type Job = {
     id: string | number;
@@ -15,9 +17,14 @@ type Job = {
 };
 
 export default function JobListPage() {
+
+    const [selectedLocation, setSelectedLocation] = React.useState<string>('');
+    const [searchTitle, setSearchTitle] = React.useState<string>('');
+
     const page = 1;
     const pageSize = 10;
     const { jobs, isLoading, error } = useGetPublicJobs(page, pageSize);
+    const { locations } = useGetJobsLocations();
 
     if (isLoading) {
         return (
@@ -75,24 +82,71 @@ export default function JobListPage() {
         );
     }
 
-
     // jobs.data is the array of Job
     const jobList: Job[] = jobs.data ?? [];
+    const filteredJobs = jobList.filter(job => {
+        const matchesTitle = job.title.toLowerCase().includes(searchTitle.toLowerCase());
+        const matchesLocation = selectedLocation ? job.location === selectedLocation : true;
+        return matchesTitle && matchesLocation;
+    });
 
     return (
         <div className="bg-[#E5EDF9] min-h-screen">
             <div className="container mx-auto px-4 py-8">
                 {/* company logo */}
-                <div className="flex items-center mb-8">
+                <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-12 gap-4">
                     <Link href="/" passHref className="flex items-center space-x-2">
                         <img src="/logo.png" alt="Company Logo" className="h-10" />
                         <h1 className="text-2xl font-bold">Job Board system</h1>
                     </Link>
+                    <div className="flex items-center gap-2">
+                        <div className="relative w-44 md:w-68">
+                            <input
+                                type="text"
+                                id="title"
+                                name="title"
+                                className="block px-2 pb-2 pt-3 w-full text-xs text-gray-900 bg-[#DDEAFB] rounded-lg border border-blue-500 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer placeholder:text-[#082777]"
+                                placeholder=""
+                                required
+                                value={searchTitle}
+                                onChange={e => setSearchTitle(e.target.value)}
+                            />
+                            <Label
+                                htmlFor="title"
+                                className="absolute text-xs text-[#082777] duration-300 transform -translate-y-3 scale-75 top-2 z-10 origin-[0] bg-[#DDEAFB] px-1 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-3 start-1"
+                            >
+                                Search by title
+                            </Label>
+                        </div>
+
+                        <div className="relative w-44 md:w-68">
+                            <select
+                                id="location"
+                                name="location"
+                                className="block px-2 pb-2 pt-3 w-full text-xs text-gray-900 bg-[#DDEAFB] rounded-md border border-blue-500 appearance-none dark:text-white dark:border-blue-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer placeholder:text-[#082777]"
+                                value={selectedLocation}
+                                onChange={e => setSelectedLocation(e.target.value)}
+                            >
+                                <option value="">All Locations</option>
+                                {locations?.map((loc: string) => (
+                                    <option key={loc} value={loc}>
+                                        {loc}
+                                    </option>
+                                ))}
+                            </select>
+                            <Label
+                                htmlFor="location"
+                                className="absolute text-xs text-[#082777] duration-300 transform -translate-y-3 scale-75 top-2 z-10 origin-[0] bg-[#DDEAFB] px-1 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-3 start-1"
+                            >
+                                Location
+                            </Label>
+                        </div>
+                    </div>
                 </div>
 
-                {jobList.length >= 1 ? (
+                {filteredJobs.length >= 1 ? (
                     <ul className="space-y-6">
-                        {jobList.map((job: Job) => (
+                        {filteredJobs.map((job: Job) => (
                             <li
                                 key={job.id}
                                 className="border p-4 rounded-md bg-accent flex flex-col justify-between items-start relative transition-shadow duration-200 ease-in-out hover:shadow-lg hover:-translate-y-1 hover:border-[#4B93E7] hover:bg-[#f3f8fd]"
