@@ -376,7 +376,7 @@ export const userColumns: ColumnDef<User>[] = [
         cell: ({ row }) => (
             <div className="flex items-center gap-4">
                 <Image
-                    src="/default-avatar.png"
+                    src="/profile.png"
                     alt={row.getValue("names")}
                     width={30}
                     height={30}

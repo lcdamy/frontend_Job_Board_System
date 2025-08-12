@@ -86,7 +86,8 @@ export default function JobListPage() {
     const jobList: Job[] = jobs.data ?? [];
     const filteredJobs = jobList.filter(job => {
         const matchesTitle = job.title.toLowerCase().includes(searchTitle.toLowerCase());
-        const matchesLocation = selectedLocation ? job.location === selectedLocation : true;
+        // If 'All Locations' (empty string), show all jobs regardless of location
+        const matchesLocation = selectedLocation === '' || job.location === selectedLocation;
         return matchesTitle && matchesLocation;
     });
 

@@ -4,10 +4,25 @@ import { DataTable } from '@/components/table/data-table'
 import { applicationColumns } from '@/components/table/columns'
 import { Skeleton } from "@/components/ui/skeleton"
 import { useGetApplications } from '@/hooks/useGetApplications'
+import { useGetPublicJobs } from '@/hooks/useGetPublicJobs';
+import { Label } from "@/components/ui/label";
+import { JobApplication } from "@/lib/types";
+
+
 export default function DashboardApplication() {
+    const [selectedjob, setSelectedjob] = React.useState<string>('');
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
     const { applications, total, error, isLoading, sessionStatus } = useGetApplications(page, pageSize);
+    const { jobs } = useGetPublicJobs(1, 100); // Fetch jobs for location filter
+
+
+
+    const filteredApplications = applications?.data.filter((application: JobApplication) => {
+        // If 'All jobs' is selected, show all applications
+        if (!selectedjob) return true;
+        return String(application.jobId) === selectedjob;
+    });
 
     if (isLoading || sessionStatus == 'loading') {
         return (
@@ -50,9 +65,33 @@ export default function DashboardApplication() {
 
     return (
         <div className="flex flex-col w-full">
+            <div className="flex justify-end">
+                <div className="relative w-44 md:w-68 mb-8">
+                    <select
+                        id="job"
+                        name="job"
+                        className="block px-2 pb-2 pt-3 w-full text-xs text-gray-900 bg-[#DDEAFB] rounded-md border border-blue-500 appearance-none dark:text-white dark:border-blue-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer placeholder:text-[#082777]"
+                        value={selectedjob}
+                        onChange={e => setSelectedjob(e.target.value)}
+                    >
+                        <option value="">All jobs</option>
+                        {jobs?.data.map((job: { id: string | number; title: string }) => (
+                            <option key={job.id} value={job.id}>
+                                {job.title}
+                            </option>
+                        ))}
+                    </select>
+                    <Label
+                        htmlFor="job"
+                        className="absolute text-xs text-[#082777] duration-300 transform -translate-y-3 scale-75 top-2 z-10 origin-[0] bg-[#DDEAFB] px-1 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-3 start-1"
+                    >
+                        job
+                    </Label>
+                </div>
+            </div>
             <DataTable
                 columns={applicationColumns}
-                data={applications?.data ?? []}
+                data={filteredApplications ?? []}
                 page={page}
                 pageSize={pageSize}
                 total={total}
