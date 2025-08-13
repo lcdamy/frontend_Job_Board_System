@@ -16,7 +16,8 @@ import { FaClipboardList } from 'react-icons/fa';
 function AppHeader() {
   const router = useRouter()
   const logout = () => {
-    signOut({ callbackUrl: `${window.location.origin}/login` })
+    // Use an absolute URL or set NEXTAUTH_URL in your .env file to match your deployment
+    signOut({ callbackUrl: '/login' })
   }
   const { data: session, status } = useSession();
 
