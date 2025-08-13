@@ -183,14 +183,14 @@ export default function Page() {
           <div>
             <div className="mt-2 flex flex-row gap-4 flex-wrap">
               <a
-                href={jobApplication?.coverLetter}
+                href={jobApplication?.resumeURL}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-2 border rounded px-2 py-1 text-gray-700 bg-white transition-all duration-200 hover:bg-blue-50 hover:text-gray-700 hover:shadow-md hover:scale-105 group"
               >
                 <Image
                   src={
-                    jobApplication?.coverLetter && jobApplication.coverLetter.endsWith('docx')
+                    jobApplication?.resumeURL && jobApplication.resumeURL.endsWith('docx')
                       ? '/word.png'
                       : '/pdf.png'
                   }
