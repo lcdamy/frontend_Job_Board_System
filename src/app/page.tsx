@@ -186,7 +186,7 @@ export default function JobListPage() {
                                     </div>
                                     <Link
                                         href={`/apply/${job.id}`}
-                                        className="text-[#4B93E7] hover:text-[#082777] text-sm no-underline hover:underline flex items-center gap-2 absolute bottom-4 right-4"
+                                        className="text-[#4B93E7] hover:text-[#082777] text-sm no-underline flex items-center gap-2 absolute bottom-4 right-4"
                                     >
                                         <span className="px-4 py-2 bg-[#4B93E7] text-white rounded-md shadow hover:bg-[#082777] transition-colors duration-200 font-medium">
                                             Apply for this job

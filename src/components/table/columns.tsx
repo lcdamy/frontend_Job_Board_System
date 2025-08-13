@@ -187,10 +187,10 @@ export const jobColumns: ColumnDef<Job>[] = [
                                     dialog.innerHTML = `
                                         <div>
                                             <h2 class="text-lg font-semibold mb-2">Delete Job?</h2>
-                                            <p class="mb-4">Are you sure you want to delete this job? This action cannot be undone.</p>
+                                            <p class="mb-4 text-xs">Are you sure you want to delete this job? This action cannot be undone.</p>
                                             <div class="flex justify-end gap-2">
-                                                <button id="cancel-btn" class="px-4 py-2 rounded bg-gray-200 text-gray-700">Cancel</button>
-                                                <button id="confirm-btn" class="px-4 py-2 rounded bg-red-600 text-white">Delete</button>
+                                                <button id="cancel-btn" class="px-4 py-2 rounded text-sm cursor-pointer bg-gray-200 text-gray-700 transition-colors hover:bg-gray-300 hover:text-gray-900">Cancel</button>
+                                                <button id="confirm-btn" class="px-4 py-2 rounded text-sm cursor-pointer bg-red-600 text-white transition-colors hover:bg-red-700 hover:text-white">Delete</button>
                                             </div>
                                         </div>
                                     `;

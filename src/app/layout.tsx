@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import AuthProvider from "@/components/AuthProvider/AuthProvider";
+import ReduxProvider from "@/store/ReduxProvider";
+import NotificationList from "@/store/NotificationList";
 
 
 
@@ -17,11 +19,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <AuthProvider>
-          <div>
-            {children}
-          </div>
-        </AuthProvider>
+        <ReduxProvider>
+          <AuthProvider>
+            <NotificationList />
+            <div>
+              {children}
+            </div>
+          </AuthProvider>
+        </ReduxProvider>
       </body>
     </html>
   );

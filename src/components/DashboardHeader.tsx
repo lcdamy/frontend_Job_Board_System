@@ -14,12 +14,13 @@ import { useState, useRef, useEffect } from "react"
 import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import { addNewJobSchema } from "@/lib/validation"
-import toast, { Toaster } from 'react-hot-toast';
+import { useDispatch } from 'react-redux';
+import { addNotification } from '@/store/notificationSlice';
 import { useSession } from 'next-auth/react';
-
 
 // New: Accepts optional jobToEdit and onEditJob callback props
 function DashboardHeader({ jobToEdit = null, onEditJob = null }: { jobToEdit?: any, onEditJob?: any }) {
+  const dispatch = useDispatch();
   const [loadingJob, setLoadingJob] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
@@ -95,7 +96,11 @@ function DashboardHeader({ jobToEdit = null, onEditJob = null }: { jobToEdit?: a
     });
 
     if (error) {
-      toast.error(error.message);
+      dispatch(addNotification({
+        id: Date.now().toString(),
+        type: 'error',
+        message: error.message,
+      }));
       setLoadingJob(false);
       return;
     }
@@ -143,7 +148,11 @@ function DashboardHeader({ jobToEdit = null, onEditJob = null }: { jobToEdit?: a
 
       const data = await response.json();
       if (data.status === 'success') {
-        toast.success(jobToEdit ? 'Job updated successfully!' : 'Job added successfully!');
+        dispatch(addNotification({
+          id: Date.now().toString(),
+          type: 'success',
+          message: jobToEdit ? 'Job updated successfully!' : 'Job added successfully!'
+        }));
         mutate((key) => typeof key === 'string' && key.includes('/api/v1/job/list'));
         setFormState({
           title: '',
@@ -158,11 +167,19 @@ function DashboardHeader({ jobToEdit = null, onEditJob = null }: { jobToEdit?: a
         setDialogOpen(false);
         if (onEditJob) onEditJob(null); // clear edit state in parent
       } else {
-        toast.error(data.message || (jobToEdit ? 'Failed to update job' : 'Failed to add job'));
+        dispatch(addNotification({
+          id: Date.now().toString(),
+          type: 'error',
+          message: data.message || (jobToEdit ? 'Failed to update job' : 'Failed to add job')
+        }));
       }
     } catch (error) {
       console.error('An unexpected error happened:', error);
-      toast.error('An unexpected error occurred.');
+      dispatch(addNotification({
+        id: Date.now().toString(),
+        type: 'error',
+        message: 'An unexpected error occurred.'
+      }));
     } finally {
       setLoadingJob(false);
     }
@@ -345,9 +362,7 @@ function DashboardHeader({ jobToEdit = null, onEditJob = null }: { jobToEdit?: a
                 {loadingJob ? (jobToEdit ? "Saving..." : "Saving...") : (jobToEdit ? "Update" : "Save")}
               </Button>
             </DialogFooter>
-            <div>
-              <Toaster position="top-right" />
-            </div>
+            {/* Notification handled globally by NotificationList */}
           </form>
         </DialogContent>
       </Dialog>
