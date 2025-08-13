@@ -77,7 +77,17 @@ export default function JobListPage() {
                         <circle cx="12" cy="16" r="1" fill="currentColor" />
                     </svg>
                     <span className="text-red-600 font-light text-lg">Error loading jobs</span>
-                    <span className="text-gray-500 mt-1 text-sm">Please try refreshing the page or check your connection.</span>
+                    <span className="text-gray-700 mt-3 text-base text-center">
+                        <b className="block mb-1">Please ensure the backend server is running at:</b>
+                        <a
+                            href={process.env.NEXT_PUBLIC_API_URL ?? "#"}
+                            className="text-blue-700 underline font-semibold text-lg"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            {process.env.NEXT_PUBLIC_API_URL ?? "NEXT_PUBLIC_API_URL not set"}
+                        </a>
+                    </span>
                 </div>
             </div>
         );
