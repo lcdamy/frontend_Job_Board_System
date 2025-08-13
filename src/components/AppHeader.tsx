@@ -10,14 +10,13 @@ import { ChevronDown, Search } from 'lucide-react';
 import { signOut, signIn } from 'next-auth/react'
 import { useSession } from 'next-auth/react';
 import { Skeleton } from "@/components/ui/skeleton"
-import Link from 'next/link'
 import { IoLogOut } from "react-icons/io5";
 import { FaClipboardList } from 'react-icons/fa';
 
 function AppHeader() {
   const router = useRouter()
   const logout = () => {
-    signOut({ callbackUrl: '/login' })
+    signOut({ callbackUrl: `${window.location.origin}/login` })
   }
   const { data: session, status } = useSession();
 
